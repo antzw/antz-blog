@@ -1,0 +1,31 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { render } from 'astro:content';
+/*
+getStaticPaths 用 post.id 作为 slug，保证类型正确。
+通过 props: post 传递内容数据。
+用 Astro.props 获取当前文章数据。
+用 render(post) 渲染 markdown 内容，得到 Content 组件。
+用你原来的 Layout 包裹内容。
+这样写可以避免 slug 类型错误，并且更贴近 Astro 官方推荐的 props 用法。
+*/
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.slug }, // 只传字符串，不包数组
+    props: post,
+  }));
+}
+
+type Props = CollectionEntry<'blog'>;
+
+const post = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout>
+  <h1>{post.data.title}</h1>
+  <p>📅发布日期：{post.data.pubDate.toLocaleDateString()}</p>
+  <Content />
+</Layout>
