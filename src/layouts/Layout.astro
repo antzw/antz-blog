@@ -1,11 +1,24 @@
+---
+import "../styles/global.css";
+---
+
 <html lang="zh">
   <head>
     <meta charset="utf-8" />
-    <title><slot name="title" /></title>
+    <title><slot name="title" />Kevin‘s Blog</slot></title>
   </head>
   <body>
+    <header>
+      <h1>✨我的数字游乐场🪐</h1>
+      <nav>
+        <a href="/">主页</a> | <a href="/blog">博客</a>
+      </nav>
+    </header>
+
     <main>
       <slot />
     <main>
+    
+    <footer>©️ 2025 antz</footer>
   </body>
 </html>
