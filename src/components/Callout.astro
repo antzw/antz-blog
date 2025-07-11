@@ -1,0 +1,31 @@
+---
+const { type = "info", icon = "💡" } = Astro.props;
+---
+
+<style>
+.callout {
+  border-left: 4px solid var(--border, #ccc);
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  margin: 1.5rem 0;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.callout[data-type="info"] {
+  --border: #007acc;
+}
+.callout[data-type="warn"] {
+  --border: #cc7a00;
+}
+.callout[data-type="success"] {
+  --border: #2c9f47;
+}
+</style>
+
+<dev class="callout" data-type={type}>
+  <div>{icon}</div>
+  <div><slot /></div>
+</div>
