@@ -6,6 +6,16 @@
   --line-height: 1.75;
   --bg: #ffffff;
   --fg: #1e1e1e;
+
+  --accent: #007acc;
+  --code-bg: #f5f5f5;
+}
+
+:root[data-theme="dark"] {
+  --bg: #1e1e1e;
+  --fg: #ffffff;
+  --accent: #66ccff;
+  --code-bg: #2c2c2c;
 }
 
 body {
@@ -17,9 +27,10 @@ body {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 2rem 1rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* 让markdown渲染内容美观*/
+/* Markdown 美化 */
 h1, h2, h3, h4 {
   font-weight: 600;
   margin-top:2em;
@@ -37,7 +48,7 @@ blockquote {
 }
 
 pre {
-  background-color: #f5f5f5;
+  background-color: var(--code-bg);
   padding: 1em;
   overflow: auto;
   border-radius: 8px;
@@ -46,6 +57,33 @@ pre {
 code {
   background: #f0f0f0;
   padding: 0.2em 0.4em;
-  border-radius:4px;
+  border-radius: 4px;
   font-family: Menlo, monospace;
+}
+
+
+/* Callout 组件 */
+.callout {
+  padding: 1rem;
+  border-left: 4px solid var(--accent);
+  background: #f9f9f9;
+  margin: 1.5rem 0;
+  border-radius: 6px;
+  display: flex;
+  gap: 1rem;
+
+}
+[data-theme="dark"] .callout {
+  background: #2a2a2a;
+}
+
+/* 夜间模式覆盖 */
+:root[data-theme="dark"] pre {
+  background-color: #2d2d2d;
+  color: #f8f8f8;
+}
+
+:root[data-theme="dark"] code {
+  background: #3a3a3a;
+  color: #f8f8f8;
 }
