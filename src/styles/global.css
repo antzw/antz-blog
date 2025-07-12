@@ -87,3 +87,11 @@ code {
   background: #3a3a3a;
   color: #f8f8f8;
 }
+
+button#theme-toggle {
+  font-size: 1.2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 1rem;
+}
