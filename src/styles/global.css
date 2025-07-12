@@ -54,13 +54,28 @@ pre {
   border-radius: 8px;
 }
 
-code {
-  background: #f0f0f0;
+p code, li code, span code {
+  background: var(--code-bg);
   padding: 0.2em 0.4em;
   border-radius: 4px;
   font-family: Menlo, monospace;
+  transition: background-color 0.3s ease;
 }
 
+/* 让代码块整体统一样式，由 <pre> 控制 */
+pre {
+  background: var(--code-bg); /* 或你喜欢的主题色 */
+  color: #fff;
+  padding: 1em;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+/* 禁止 <pre><code> 内的 code 再有背景（避免嵌套突兀） */
+pre code {
+  background: none;
+  padding: 0;
+}
 
 /* Callout 组件 */
 .callout {
@@ -78,14 +93,11 @@ code {
 }
 
 /* 夜间模式覆盖 */
-:root[data-theme="dark"] pre {
-  background-color: #2d2d2d;
-  color: #f8f8f8;
-}
-
-:root[data-theme="dark"] code {
-  background: #3a3a3a;
-  color: #f8f8f8;
+:root[data-theme="dark"] {
+  --bg: #1e1e1e;
+  --fg: #ffffff;
+  --accent: #66ccff;
+  --code-bg: #2c2c2c;
 }
 
 button#theme-toggle {
