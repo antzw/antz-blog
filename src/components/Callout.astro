@@ -13,7 +13,15 @@ const { type = "info", icon = "💡" } = Astro.props;
   display: flex;
   gap: 1rem;
   align-items: flex-start;
+  transition: background 0.3s, color 0.3s;
 }
+
+[data-theme="dark"] .callout {
+  border-color: var(--accent-dark);
+  background: var(--callout-bg-dark);
+  color: var(--callout-fg-dark);
+}
+
 
 .callout[data-type="info"] {
   --border: #007acc;

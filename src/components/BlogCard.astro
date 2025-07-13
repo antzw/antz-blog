@@ -1,19 +1,102 @@
 ---
 const { title, description, pubDate, cover, tags, href } = Astro.props;
+
+const formatDate = (value) => {
+  try {
+    const d = typeof value === "string" ? new Date(value) : value;
+    return d.toLocaleDateString("zh-CN", { year: "numeric", month: "2-digit", day: "2-digit" });
+  } catch {
+    return "无发布日期";
+  }
+};
 ---
 
 <article class="card">
   {cover && (
-    <a href={href}>
-      <img src={cover} alt={title} class="cover" />
+    <a href={href} class="cover">
+      <img src={cover} alt={title} />
     </a>
   )}
   <div class="content">
-    <p>
-      <h2><a href={href}>{title}</a></h2><small>        📅 {pubDate ? new Date(pubDate).toLocaleDateString() : "无发布日期"}</small>
-    </p>
+    <div class="post-header">
+      <h2><a href={href}>{title}</a></h2>
+      📅 {formatDate(pubDate)}
+    </div>
     <p>{description}</p>
-    {/* {console.log("🧪 pubDate", pubDate)} */}
-    {tags && <p>🏷️ {tags.join(", ")}</p>}
+    {tags && <p class="tags">🏷️ {tags.join(", ")}</p>}
   </div>
 </article>
+
+
+<style>
+  .card {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 8px;
+  background-color: var(--card-bg, #f6f6f6);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: background-color 0.3s ease;
+  flex-wrap: wrap;
+}
+[data-theme="dark"] .card {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+[data-theme="dark"] .cover {
+  border-bottom: 1px solid #444;
+}
+.card:hover {
+  background-color: var(--card-hover-bg, #f1f1f1);
+}
+
+.cover {
+  flex: 0 0 160px;
+}
+
+.cover img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.post-header h2 {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.post-header small {
+  font-size: 0.875rem;
+  color: var(--fg-light, #666);
+}
+
+.tags {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #888;
+}
+  .tags a {
+    color: var(--accent, #007acc);
+    text-decoration: none;
+  }
+
+  .tags a:hover {
+    text-decoration: underline;
+  }
+</style>
