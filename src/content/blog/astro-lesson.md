@@ -2,8 +2,8 @@
 title: Astro搭建自己的博客教学
 description: 从0开始一步一步写一个自己的博客网站
 pubDate: 2025-07-13
-cover: /cover/astro.png
 tags: ["astro", "建站", "blog","教学"]
+cover: "/cover/astro.png"
 ---
 
 # 第1课 astro-01-project-init.md

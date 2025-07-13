@@ -6,8 +6,8 @@ const blog = defineCollection({
     title: z.string(),
     description: z.string(),
     pubDate: z.date(),  // 自动校验是否是合法日期
-    cover: z.string().optional(),
     tags: z.array(z.string()).optional(),
+    cover: z.string().optional(),
   }),
 });
 

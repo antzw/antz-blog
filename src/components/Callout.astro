@@ -5,8 +5,9 @@ const { type = "info", icon = "💡" } = Astro.props;
 <style>
 .callout {
   border-left: 4px solid var(--border, #ccc);
+  background: var(--callout-bg);
+  color: var(--callout-fg);
   padding: 1rem;
-  background-color: #f9f9f9;
   border-radius: 6px;
   margin: 1.5rem 0;
   display: flex;

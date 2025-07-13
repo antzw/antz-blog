@@ -2,8 +2,8 @@
 title: Astro 博客从零开始教学路线
 description: 从0开始一步一步写一个自己的博客网站
 pubDate: 2025-07-13
-cover: /cover/astro.png
 tags: ["astro", "建站", "blog","教学"]
+cover: "/cover/astro.png"
 ---
 
 # Astro 博客从零开始教学路线

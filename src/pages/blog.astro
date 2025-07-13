@@ -1,22 +1,22 @@
 ---
+import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
+import BlogCard from "../components/BlogCard.astro";
 
 const posts = await getCollection("blog");
 ---
 
-<html lang="zh">
-  <head>
-    <meta charset="UTF-8" />
-    <title>博客列表</title>
-  </head>
-  <body>
-    <h1>📚博客文章列表</h1>
-    <ul>
-     {posts.map((post) => (
-        <li>
-          <a href={`/blog/${post.slug}/`}>{post.data.title}</a>（发表于 {post.data.pubDate.toLocaleDateString()}）
-        </li>
-      ))}
-    </ul>
-  </body>
-</html>
+<Layout>
+<h1>📚博客文章列表</h1>
+
+  {posts.map(post => (
+    <BlogCard
+      title={post.data.title}
+      description={post.data.description}
+      pubDate={post.data.pubDate}
+      cover={post.data.cover}
+      tags={post.data.tags}
+      href={`/blog/${post.slug}/`}
+    />
+  ))}
+</Layout>

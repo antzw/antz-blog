@@ -1,0 +1,19 @@
+---
+const { title, description, pubDate, cover, tags, href } = Astro.props;
+---
+
+<article class="card">
+  {cover && (
+    <a href={href}>
+      <img src={cover} alt={title} class="cover" />
+    </a>
+  )}
+  <div class="content">
+    <p>
+      <h2><a href={href}>{title}</a></h2><small>        📅 {pubDate ? new Date(pubDate).toLocaleDateString() : "无发布日期"}</small>
+    </p>
+    <p>{description}</p>
+    {/* {console.log("🧪 pubDate", pubDate)} */}
+    {tags && <p>🏷️ {tags.join(", ")}</p>}
+  </div>
+</article>
