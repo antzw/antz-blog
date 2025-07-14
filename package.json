@@ -4,12 +4,16 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && tsx src/scripts/generateSearchIndex.ts",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.0",
-    "astro": "^5.11.0"
+    "astro": "^5.11.0",
+    "fuse.js": "^7.1.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.3"
   }
 }

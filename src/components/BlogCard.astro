@@ -10,87 +10,94 @@ const formatDate = (value) => {
   }
 };
 ---
+<a href={href} class="card-link">
+  <article class="card">
+    {cover && (
+      <div class="cover">
+        <!-- 使用 Astro 的图片优化功能 -->
+        <img src={cover} alt={title} loading="lazy" decoding="async"
+          width="160" height="90" class="cover-image" />
+  
+        <!-- 如果使用 Astro 图片组件，可以这样写：
+        <AstroImage src={cover} alt={title} width={160} height={90} loading="lazy" decoding="async" />
+        但需要在 Astro 配置中添加图片处理支持 -->
+      </div>
 
-<article class="card">
-  {cover && (
-    <a href={href} class="cover">
-      <img src={cover} alt={title} />
-    </a>
-  )}
-  <div class="content">
-    <div class="post-header">
-      <h2><a href={href}>{title}</a></h2>
-      📅 {formatDate(pubDate)}
+    )}
+    <div class="content">
+      <div class="post-header">
+        <h2>{title}</h2>
+        📅 {formatDate(pubDate)}
+      </div>
+      <p>{description}</p>
+      {tags && <p class="tags">🏷️ {tags.join(", ")}</p>}
     </div>
-    <p>{description}</p>
-    {tags && <p class="tags">🏷️ {tags.join(", ")}</p>}
-  </div>
-</article>
+  </article>
+</a>
 
 
 <style>
   .card {
-  display: flex;
-  gap: 1rem;
-  padding: 1rem;
-  margin: 1rem 0;
-  border-radius: 8px;
-  background-color: var(--card-bg, #f6f6f6);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  transition: background-color 0.3s ease;
-  flex-wrap: wrap;
-}
-[data-theme="dark"] .card {
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-}
-[data-theme="dark"] .cover {
-  border-bottom: 1px solid #444;
-}
-.card:hover {
-  background-color: var(--card-hover-bg, #f1f1f1);
-}
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+    background-color: var(--card-bg, #f6f6f6);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s ease;
+  }
 
-.cover {
-  flex: 0 0 160px;
-}
+  [data-theme="dark"] .card {
+    background-color: #3b3b3b;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
 
-.cover img {
-  width: 100%;
-  height: auto;
-  border-radius: 6px;
-  object-fit: cover;
-}
+  .card:hover {
+    background-color: var(--card-hover-bg, #f1f1f1);
+  }
 
-.content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
+  .cover {
+    flex: 0 0 160px;
+  }
 
-.post-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
+  .cover img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 6px;
+  }
 
-.post-header h2 {
-  font-size: 1.25rem;
-  margin: 0;
-}
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 
-.post-header small {
-  font-size: 0.875rem;
-  color: var(--fg-light, #666);
-}
+  .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
 
-.tags {
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
-  color: #888;
-}
+  .post-header h2 {
+    font-size: 1.25rem;
+    margin: 0;
+  }
+
+  .post-header small {
+    font-size: 0.875rem;
+    color: var(--fg-light, #666);
+  }
+
+  .tags {
+    font-size: 0.875rem;
+    color: #888;
+  }
+
   .tags a {
     color: var(--accent, #007acc);
     text-decoration: none;
@@ -99,4 +106,5 @@ const formatDate = (value) => {
   .tags a:hover {
     text-decoration: underline;
   }
+
 </style>

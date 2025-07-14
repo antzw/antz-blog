@@ -1,4 +1,5 @@
 ---
+import SearchBox from '../components/SearchBox.astro';
 import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import BlogCard from "../components/BlogCard.astro";
@@ -6,17 +7,26 @@ import BlogCard from "../components/BlogCard.astro";
 const posts = await getCollection("blog");
 ---
 
-<Layout>
-<h1>📚博客文章列表</h1>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>博客列表</title>
+  </head>
+  <body>
+    <Layout>
+      <h1>📚博客文章列表</h1>
+      <SearchBox />
 
-  {posts.map(post => (
-    <BlogCard
-      title={post.data.title}
-      description={post.data.description}
-      pubDate={post.data.pubDate}
-      cover={post.data.cover}
-      tags={post.data.tags}
-      href={`/blog/${post.slug}/`}
-    />
-  ))}
-</Layout>
+      {posts.map(post => (
+        <BlogCard
+          title={post.data.title}
+          description={post.data.description}
+          pubDate={post.data.pubDate}
+          cover={post.data.cover}
+          tags={post.data.tags}
+          href={`/blog/${post.slug}/`}
+        />
+      ))}
+    </Layout>
+  </body>
+</html>

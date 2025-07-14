@@ -1,11 +1,34 @@
 ---
 // src/pages/index.astro
+//import { AstroImage } from 'astro:assets';
+import "../styles/global.css";
 ---
 
 <html lang="zh">
   <head>
     <meta charset="UTF-8" />
     <title>我的主页</title>
+
+  </head>
+  <body>
+    <div class="container">
+      <h1>欢迎来到我的主页！</h1>
+      <p>这是我的个人博客，记录我的学习和生活点滴。</p>
+      
+      <img
+        src="/cover/antz_icon.png" 
+        alt="Antz Icon" 
+        width={512} 
+        height={512} 
+        loading="lazy" 
+        decoding="async" 
+      />
+
+    </div>
+    <a href="/blog" class="btn">Blog</a>
+  </body>
+</html>
+
 <style>
   * {
     margin: 0;
@@ -36,9 +59,3 @@
     background-color: #555;
   }
 </style>
-  </head>
-  <body>
-    <a href="/blog" class="btn">Blog</a>
-  </body>
-</html>
-
