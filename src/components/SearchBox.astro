@@ -1,0 +1,58 @@
+---
+// 无需脚本逻辑
+---
+
+<div class="search-box">
+  <input type="text" placeholder="搜索文章…" />
+  <ul id="search-results"></ul>
+</div>
+
+<script type="module" is:raw>
+  const input = document.querySelector('.search-box input');
+  const resultsEl = document.getElementById('search-results');
+
+  import('fuse.js').then(({ default: Fuse }) => {
+    fetch('/search-index.json').then(res => res.json()).then(data => {
+      const fuse = new Fuse(data, {
+        keys: ['title', 'description', 'body'],
+        threshold: 0.3,
+      });
+
+      input.addEventListener('input', () => {
+        const query = input.value.trim();
+        if (!query) {
+          resultsEl.innerHTML = '';
+          return;
+        }
+        const results = fuse.search(query).map(r => r.item);
+        resultsEl.innerHTML = results.map(post => 
+          `<li><a href="${post.slug}">${post.title}</a></li>`
+        ).join('');
+      });
+    });
+  });
+</script>
+
+<style>
+  .search-box {
+    margin: 2rem 0;
+  }
+
+  .search-box input {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  .search-box ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 1rem;
+  }
+
+  .search-box li {
+    margin-bottom: 0.5rem;
+  }
+</style>
