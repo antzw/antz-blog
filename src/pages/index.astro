@@ -1,61 +1,168 @@
 ---
-// src/pages/index.astro
-//import { AstroImage } from 'astro:assets';
-import "../styles/global.css";
+// 示例首页，不需要额外 import
+import BlogCard from '../components/BlogCard.astro';
 ---
 
 <html lang="zh">
   <head>
     <meta charset="UTF-8" />
-    <title>我的主页</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>我的博客主页</title>
+    <link rel="stylesheet" href="/styles/global.css" />
   </head>
   <body>
-    <div class="container">
-      <h1>欢迎来到我的主页！</h1>
-      <p>这是我的个人博客，记录我的学习和生活点滴。</p>
-      
-      <img
-        src="/cover/antz_icon.png" 
-        alt="Antz Icon" 
-        width={512} 
-        height={512} 
-        loading="lazy" 
-        decoding="async" 
-      />
+    <header class="site-header">
+      <nav class="nav">
+        <a href="/" class="logo">蚂蚁先生的小站</a>
+        <ul class="menu">
+          <li><a href="/blog">博客</a></li>
+          <li><a href="/about">关于</a></li>
+          <li><a href="#contact">联系</a></li>
+        </ul>
+      </nav>
+    </header>
 
-    </div>
-    <a href="/blog" class="btn">Blog</a>
+    <main class="hero">
+      <h1>欢迎来到我的博客</h1>
+      <p>记录思考、构建知识、探索可能。</p>
+      <a href="/blog" class="btn">📚 浏览博客文章</a>
+    </main>
+
+    <section class="section">
+      <h2>📝 最新文章</h2>
+      <div class="post-list">
+        <!-- 替换为 <BlogCard /> 组件列表 -->
+        <BlogCard slug="/blog/astro/lesson-6-card-layout.md"></BlogCard>
+        <BlogCard title="文章标题" description="文章描述" slug="/blog/astro/lesson-6-card-layout.md" />
+        <BlogCard title="文章标题" description="文章描述" slug="/blog/astro/lesson-7-slug-routing.md" />
+        <BlogCard title="文章标题" description="文章描述" slug="/blog/astro/lesson-8-blog-search.md" />
+        <!-- 示例占位 -->
+        <article class="post-card">文章 1 占位</article>
+        <article class="post-card">文章 2 占位</article>
+        <article class="post-card">文章 3 占位</article>
+      </div>
+    </section>
+
+    <footer class="site-footer" id="contact">
+      <h2>📮 联系我</h2>
+      <p>你可以通过以下方式找到我：</p>
+      <ul class="contact-list">
+        <li>📧 邮箱：<a href="mailto:me@example.com">me@example.com</a></li>
+        <li>🐙 GitHub：<a href="https://github.com/yourname" target="_blank">yourname</a></li>
+        <li>🌐 主页：<a href="https://yourdomain.com" target="_blank">yourdomain.com</a></li>
+      </ul>
+    </footer>
   </body>
 </html>
 
 <style>
-  * {
+  :root {
+      --bg: #f9f9f9;
+      --fg: #333;
+      --accent: #007acc;
+    }
+
+    html[data-theme='dark'] {
+      --bg: #121212;
+      --fg: #e0e0e0;
+      --accent: #bb86fc;
+    }
+  body {
     margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg, #f9f9f9);
+    color: var(--fg, #333);
+    line-height: 1.6;
   }
 
-  body {
-    height: 100vh;
+  a {
+    color: var(--accent, #007acc);
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .site-header {
+    background: #fff;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     display: flex;
-    justify-content: center; /* 水平居中 */
-    align-items: center;     /* 垂直居中 */
-    background-color: #f9f9f9;
-    font-family: sans-serif;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav .logo {
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+
+  .menu {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+  }
+  .menu li {
+    margin: 0;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: linear-gradient(to right, #d7e8f7, #f0f9ff);
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .hero p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
   }
 
   .btn {
-    padding: 1rem 2rem;
-    background-color: #333;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 12px;
-    font-size: 1.2rem;
-    transition: background-color 0.3s;
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: #007acc;
+    color: white;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+  .btn:hover {
+    background-color: #005fa3;
   }
 
-  .btn:hover {
-    background-color: #555;
+  .section {
+    padding: 2rem;
+    max-width: 800px;
+    margin: auto;
+  }
+
+  .post-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+
+  .post-card {
+    padding: 1rem;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    background-color: white;
+  }
+
+  .site-footer {
+    background: #f2f2f2;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .contact-list {
+    list-style: none;
+    padding: 0;
+  }
+  .contact-list li {
+    margin: 0.5rem 0;
   }
 </style>
