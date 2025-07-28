@@ -1,6 +1,9 @@
 ---
-// 示例首页，不需要额外 import
-import BlogCard from '../components/BlogCard.astro';
+//import SearchBox from '../components/SearchBox.astro';
+import { getCollection } from "astro:content";
+import BlogCard from "../components/BlogCard.astro";
+
+const posts = await getCollection("blog");
 ---
 
 <html lang="zh">
@@ -13,43 +16,66 @@ import BlogCard from '../components/BlogCard.astro';
   <body>
     <header class="site-header">
       <nav class="nav">
-        <a href="/" class="logo">蚂蚁先生的小站</a>
+        <!--<a href="/" class="logo">蚂蚁先生的小站</a>-->
         <ul class="menu">
-          <li><a href="/blog">博客</a></li>
-          <li><a href="/about">关于</a></li>
-          <li><a href="#contact">联系</a></li>
+          <li><a href="/">HOME</a></li>
+          <li><a href="/blog">BLOG</a></li>
+          <li><a href="/about">ABOUT</a></li>
+          <li><a href="#contact">CONTACT</a></li>
+          <li><a href="/llm" target="_blank">AI</a></li>
         </ul>
       </nav>
     </header>
 
     <main class="hero">
+      <img src="cover/antz_icon.png"  loading="lazy" decoding="async"
+          width="300" height="300" class="icon-image" />
       <h1>欢迎来到我的博客</h1>
       <p>记录思考、构建知识、探索可能。</p>
-      <a href="/blog" class="btn">📚 浏览博客文章</a>
+      <!--<a href="/blog" class="btn">📚 浏览博客文章</a>-->
     </main>
 
     <section class="section">
-      <h2>📝 最新文章</h2>
+      <h2>最新文章</h2>
       <div class="post-list">
-        <!-- 替换为 <BlogCard /> 组件列表 -->
+        <!-- 使用 <BlogCard /> 组件渲染博客文章列表 -->
+        
+      {posts.map(post => (
+        <BlogCard
+          title={post.data.title}
+          
+          pubDate={post.data.pubDate}
+          cover={post.data.cover}
+          tags={post.data.tags}
+          href={`/blog/${post.slug}/`}
+        />
+      ))}
+   
+        <!-- 替换为 <BlogCard /> 组件列表
         <BlogCard slug="/blog/astro/lesson-6-card-layout.md"></BlogCard>
-        <BlogCard title="文章标题" description="文章描述" slug="/blog/astro/lesson-6-card-layout.md" />
-        <BlogCard title="文章标题" description="文章描述" slug="/blog/astro/lesson-7-slug-routing.md" />
-        <BlogCard title="文章标题" description="文章描述" slug="/blog/astro/lesson-8-blog-search.md" />
-        <!-- 示例占位 -->
-        <article class="post-card">文章 1 占位</article>
-        <article class="post-card">文章 2 占位</article>
-        <article class="post-card">文章 3 占位</article>
+        <BlogCard title="文章标题" description="文章描述" slug="/blog/astro/lesson-6-card-layout.md"></BlogCard>
+        <BlogCard title="文章标题" description="文章描述" slug="/blog/astro/lesson-7-slug-routing.md"></BlogCard>
+        <BlogCard title="文章标题" description="文章描述" slug="/blog/astro/lesson-8-blog-search.md"></BlogCard>
+        <BlogCard title="文章标题" description="文章描述" slug="/blog/astro/lesson-9-blog-pagination.md"></BlogCard>
+      -->
       </div>
     </section>
 
     <footer class="site-footer" id="contact">
       <h2>📮 联系我</h2>
-      <p>你可以通过以下方式找到我：</p>
+      <p>如果你有任何问题或建议，欢迎通过以下方式联系我：</p>
+      <p>我会尽快回复你的邮件或消息。</p>
+      <p>感谢你的关注和支持！</p>
+      <p>期待与你的交流！</p>
+      <p>祝你有美好的一天！</p>
+      <p>如果你喜欢我的博客，欢迎分享给你的朋友！</p>
+      <p>如果你有任何建议或意见，欢迎通过邮件或留言告诉我！</p>
+      <p>我会认真考虑你的建议，并努力改进我的博客！</p>
+      <p>再次感谢你的支持和关注！</p>
       <ul class="contact-list">
-        <li>📧 邮箱：<a href="mailto:me@example.com">me@example.com</a></li>
-        <li>🐙 GitHub：<a href="https://github.com/yourname" target="_blank">yourname</a></li>
-        <li>🌐 主页：<a href="https://yourdomain.com" target="_blank">yourdomain.com</a></li>
+        <li>📧 邮箱：<a href="mailto:wen_study@outlook.com">wen_study@outlook.com</a></li>
+        <li>🐙 GitHub：<a href="https://github.com/antzw" target="_blank">antzw</a></li>
+        <li>🌐 主页：<a href="https://antz.fun" target="_blank">antz.fun</a></li>
       </ul>
     </footer>
   </body>
@@ -57,7 +83,7 @@ import BlogCard from '../components/BlogCard.astro';
 
 <style>
   :root {
-      --bg: #f9f9f9;
+      --bg: #ffffff;
       --fg: #333;
       --accent: #007acc;
     }
@@ -66,6 +92,9 @@ import BlogCard from '../components/BlogCard.astro';
       --bg: #121212;
       --fg: #e0e0e0;
       --accent: #bb86fc;
+      
+      --interpolate-size: allow-keywords;
+
     }
   body {
     margin: 0;
@@ -73,6 +102,9 @@ import BlogCard from '../components/BlogCard.astro';
     background-color: var(--bg, #f9f9f9);
     color: var(--fg, #333);
     line-height: 1.6;
+
+    background-image: url("https://images.unsplash.com/photo-1751220170218-e57d53bd4aa8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NTE1NjQ0MjR8&ixlib=rb-4.1.0&q=80&w=1800");
+    background-attachment: fixed;
   }
 
   a {
@@ -84,7 +116,7 @@ import BlogCard from '../components/BlogCard.astro';
   }
 
   .site-header {
-    background: #fff;
+    background: #3e3e3e57;
     padding: 1rem 2rem;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     display: flex;
@@ -108,15 +140,17 @@ import BlogCard from '../components/BlogCard.astro';
 
   .hero {
     text-align: center;
-    padding: 4rem 2rem;
-    background: linear-gradient(to right, #d7e8f7, #f0f9ff);
+    padding: 2rem 2rem;
+    background:  #8b8b8b51;
   }
 
   .hero h1 {
+    color:#c2cfd7;
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
   }
   .hero p {
+    color:#bdbfdf;
     font-size: 1.2rem;
     margin-bottom: 1.5rem;
   }
@@ -124,17 +158,18 @@ import BlogCard from '../components/BlogCard.astro';
   .btn {
     display: inline-block;
     padding: 0.75rem 1.5rem;
-    background-color: #007acc;
+    background-color: #bcbcbcb6;
     color: white;
     border-radius: 4px;
     font-weight: bold;
   }
   .btn:hover {
-    background-color: #005fa3;
+    background-color: #53464689;
   }
 
   .section {
-    padding: 2rem;
+    color:#ffffff;
+    padding: 5rem;
     max-width: 800px;
     margin: auto;
   }
@@ -147,14 +182,15 @@ import BlogCard from '../components/BlogCard.astro';
 
   .post-card {
     padding: 1rem;
-    border: 1px solid #eee;
+    border: 1px solid #6f3b3b;
     border-radius: 6px;
-    background-color: white;
+    background-color: rgba(56, 56, 56, 0.786);
   }
 
   .site-footer {
-    background: #f2f2f2;
+    background: #a9a9a9db;
     padding: 2rem;
+    padding-bottom: 20rem;
     text-align: center;
   }
 
@@ -165,4 +201,143 @@ import BlogCard from '../components/BlogCard.astro';
   .contact-list li {
     margin: 0.5rem 0;
   }
+
+
+  nav {
+  width: fit-content;
+  margin: 0rem auto;
+
+  padding: 8px;
+  /*   background: black; */
+  border-radius: 8px;
+
+  @supports (corner-shape: squircle) {
+    border-radius: 24px;
+    border-shape: squircle;
+  }
+
+  ul:has(:not(:hover)) {
+    anchor-name: --test;
+  }
+
+  &::before {
+    z-index: -2;
+    background-attachment: fixed;
+    background-image: url("https://images.unsplash.com/photo-1751220170218-e57d53bd4aa8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NTE1NjQ0MjR8&ixlib=rb-4.1.0&q=80&w=1800");
+  }
+
+  &::after {
+    backdrop-filter: blur(2px);
+    background-color: hsl(200 100% 100% / 0.1);
+    z-index: -1;
+  }
+
+  & > ul {
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      z-index: -3;
+      inset: -8px;
+      border-radius: 8px;
+
+      @supports (corner-shape: squircle) {
+        border-radius: 24px;
+        border-shape: squircle;
+      }
+      background: hsla(247, 55%, 44%, 0.169); /* 菜单颜色 */
+      backdrop-filter: blur(2px);
+    }
+  }
+
+  &::before,
+  &::after {
+    content: "";
+    border-radius: 8px;
+
+    position-anchor: --test;
+    position: absolute;
+    top: calc(anchor(bottom) - 4px);
+    left: calc(anchor(left) + 1rem);
+    right: calc(anchor(right) + 1rem);
+    bottom: anchor(bottom);
+
+    transition: 500ms;
+    transition-timing-function: linear(
+      0,
+      0.008 1.1%,
+      0.031 2.2%,
+      0.129 4.8%,
+      0.257 7.2%,
+      0.671 14.2%,
+      0.789 16.5%,
+      0.881 18.6%,
+      0.957 20.7%,
+      1.019 22.9%,
+      1.063 25.1%,
+      1.094 27.4%,
+      1.114 30.7%,
+      1.112 34.5%,
+      1.018 49.9%,
+      0.99 59.1%,
+      1
+    );
+  }
+
+  &:has(a:hover)::before,
+  &:has(a:hover)::after {
+    @supports (corner-shape: squircle) {
+      corner-shape: squircle;
+      border-radius: 50%;
+    }
+    top: anchor(top);
+    left: anchor(left);
+    right: anchor(right);
+  }
+
+  &:has(li:first-of-type a:hover)::before,
+  &:has(li:first-of-type a:hover)::after {
+    @supports (corner-shape: squircle) {
+      border-radius: 32px 50% 50% 32px;
+    }
+  }
+
+  &:has(li:last-of-type a:hover)::before,
+  &:has(li:last-of-type a:hover)::after {
+    @supports (corner-shape: squircle) {
+      border-radius: 50% 32px 32px 50%;
+    }
+  }
+
+  > ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+  }
+
+  a {
+    display: block;
+    padding: 1rem;
+    text-decoration: none;
+    color: white;
+
+    &:hover {
+      position: relative;
+      display: block;
+      anchor-name: --test;
+    }
+  }
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  font-family: system-ui;
+  font-size: 1.5rem;
+}
+
 </style>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Qwen 聊天机器人</title>
+    <style>
+        body {
+            font-family: "Noto Sans SC", sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 1rem;
+        }
+        .chat-box {
+            max-width: 720px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        .message {
+            margin: 0.5rem 0;
+        }
+        .user {
+            color: #2b6cb0;
+            font-weight: bold;
+        }
+        .bot {
+            color: #38a169;
+            font-weight: bold;
+        }
+        textarea {
+            width: 98%;
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+        }
+        button {
+            margin-top: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: none;
+            background: #3182ce;
+            color: white;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-box">
+        <h2>🤖 本地大模型</h2>
+        <div id="chat-log"></div>
+        <textarea id="input" rows="10" placeholder="请输入你的问题"></textarea>
+        <button id="sendButton">发送</button>
+    </div>
+
+    <script type="module">
+        const chatLog = document.getElementById('chat-log');
+        const inputBox = document.getElementById('input');
+        const sendButton = document.getElementById('sendButton');
+
+        sendButton.addEventListener('click', sendMessage);
+
+        async function sendMessage() {
+            if (!inputBox) return;
+            const prompt = /** @type {HTMLTextAreaElement} */ (inputBox).value.trim();
+            if (!prompt) return;
+
+            // 显示用户输入
+            chatLog.innerHTML += `<div class="message"><span class="user">你：</span> ${prompt}</div>`;
+            inputBox.value = ''; // 清空输入框
+
+            try {
+              const res = await fetch('http://localhost:11434/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt })
+              });
+
+              if (!res.ok) {
+                chatLog.innerHTML += `<div class="message"><span class="bot">错误：</span> API 错误：${res.status} ${res.statusText}</div>`;
+                return;
+              }
+
+              const data = await res.json();
+              console.log(data); // 打印 JSON 数据
+              const text = data.choices[0].text; // 提取 text
+              chatLog.innerHTML += `<div class="message"><span class="bot">助手：</span> ${text}</div>`;
+            } catch (error) {
+              chatLog.innerHTML += `<div class="message"><span class="bot">错误：</span> JSON 解析失败：${error.message}</div>`;
+            }
+
+            chatLog.scrollTop = chatLog.scrollHeight; // 自动滚动到底部
+        }
+    </script>
+
+</body>
+</html>
