@@ -28,9 +28,9 @@ const posts = await getCollection("blog");
     </header>
 
     <main class="hero">
-      <img src="cover/antz_icon.png"  loading="lazy" decoding="async"
+      <img src="/cover/antz_icon.png"  loading="lazy" decoding="async"
           width="300" height="300" class="icon-image" />
-      <h1>欢迎来到我的博客</h1>
+      <h1>欢迎来到AntZ的博客</h1>
       <p>记录思考、构建知识、探索可能。</p>
       <!--<a href="/blog" class="btn">📚 浏览博客文章</a>-->
     </main>
@@ -103,8 +103,11 @@ const posts = await getCollection("blog");
     color: var(--fg, #333);
     line-height: 1.6;
 
-    background-image: url("https://images.unsplash.com/photo-1751220170218-e57d53bd4aa8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NTE1NjQ0MjR8&ixlib=rb-4.1.0&q=80&w=1800");
+    background-image: url("/cover/background-galaxy-4k.jpg");
     background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
   }
 
   a {
@@ -187,7 +190,7 @@ const posts = await getCollection("blog");
     background-color: rgba(56, 56, 56, 0.786);
   }
 
-  .site-footer {
+  .site-footer { 
     background: #a9a9a9db;
     padding: 2rem;
     padding-bottom: 20rem;
@@ -223,7 +226,9 @@ const posts = await getCollection("blog");
   &::before {
     z-index: -2;
     background-attachment: fixed;
-    background-image: url("https://images.unsplash.com/photo-1751220170218-e57d53bd4aa8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NTE1NjQ0MjR8&ixlib=rb-4.1.0&q=80&w=1800");
+    background-image: url("/cover/background-galaxy-4k.jpg");
+    background-size: cover;
+    background-position: center;
   }
 
   &::after {
@@ -246,7 +251,7 @@ const posts = await getCollection("blog");
         border-radius: 24px;
         border-shape: squircle;
       }
-      background: hsla(247, 55%, 44%, 0.169); /* 菜单颜色 */
+      background: hsla(0, 0%, 100%, 0.501); /* 菜单颜色 */
       backdrop-filter: blur(2px);
     }
   }
