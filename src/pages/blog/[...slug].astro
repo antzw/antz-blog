@@ -1,31 +1,76 @@
 ---
-import { type CollectionEntry, getCollection } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
-import { render } from 'astro:content';
-/*
-getStaticPaths 用 post.slug 作为 slug，保证类型正确。
-通过 props: post 传递内容数据。
-用 Astro.props 获取当前文章数据。
-用 render(post) 渲染 markdown 内容，得到 Content 组件。
-用你原来的 Layout 包裹内容。
-这样写可以避免 slug 类型错误，并且更贴近 Astro 官方推荐的 props 用法。
-*/
+import { type CollectionEntry, getCollection, render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
+  const posts = await getCollection("blog");
   return posts.map((post) => ({
-    params: { slug: post.slug }, // 只传字符串，不包数组
+    params: { slug: post.slug },
     props: post,
   }));
 }
 
-type Props = CollectionEntry<'blog'>;
-const slug = Astro.props.slug; // 获取当前文章的 slug
-const post = Astro.props;
+type Props = CollectionEntry<"blog">;
+const post = Astro.props as Props;
 const { Content } = await render(post);
+const tags = post.data.tags ?? [];
 ---
 
-<Layout>
-  <h1>{post.data.title}</h1>
-  <p>📅发布日期：{post.data.pubDate.toLocaleDateString()}</p>
-  <Content />
+<Layout title={`${post.data.title} | AntZ Blog`} description={post.data.description}>
+  <article class="article-page page-stack">
+    <header class="panel hero-panel article-hero prose">
+      <p class="eyebrow">Article</p>
+      <h1>{post.data.title}</h1>
+      <p class="muted article-hero__description">{post.data.description}</p>
+
+      <div class="article-hero__meta">
+        <span class="chip chip--accent">{post.data.pubDate.toLocaleDateString("zh-CN")}</span>
+        {tags.map((tag) => (
+          <span class="chip">#{tag}</span>
+        ))}
+      </div>
+    </header>
+
+    <section class="panel article-content">
+      <div class="prose article-content__inner">
+        <Content />
+      </div>
+    </section>
+  </article>
 </Layout>
+
+<style>
+  .article-page {
+    gap: 1rem;
+  }
+
+  .article-hero {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .article-hero__description {
+    font-size: 1.05rem;
+  }
+
+  .article-hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .article-content {
+    padding: clamp(1.1rem, 2vw, 1.8rem);
+    background: var(--surface-strong);
+  }
+
+  .article-content__inner {
+    color: var(--text);
+  }
+
+  .article-content__inner :global(h2),
+  .article-content__inner :global(h3),
+  .article-content__inner :global(h4) {
+    margin-top: 2rem;
+  }
+  </style>

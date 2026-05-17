@@ -1,102 +1,141 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Qwen 聊天机器人</title>
-    <style>
-        body {
-            font-family: "Noto Sans SC", sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 1rem;
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="AI 实验室 | AntZ Blog" description="本地大模型交互实验页。">
+  <div class="page-stack">
+    <section class="panel hero-panel llm-hero">
+      <div>
+        <p class="eyebrow">AI Lab</p>
+        <h1 class="hero-title">本地大模型实验室</h1>
+      </div>
+      <p class="muted">保留轻量聊天体验，并接入统一的站点样式和更清楚的版面结构。</p>
+    </section>
+
+    <section class="panel llm-panel">
+      <div id="chat-log" class="chat-log" aria-live="polite"></div>
+      <label class="llm-field">
+        <span class="muted">输入问题</span>
+        <textarea id="input" rows="8" placeholder="请输入你的问题"></textarea>
+      </label>
+      <div class="llm-actions">
+        <button id="sendButton" type="button">发送</button>
+      </div>
+    </section>
+  </div>
+
+  <script type="module" is:inline>
+    const chatLog = document.getElementById("chat-log");
+    const inputBox = document.getElementById("input");
+    const sendButton = document.getElementById("sendButton");
+
+    const appendMessage = (role, text) => {
+      if (!chatLog) return;
+      const wrapper = document.createElement("div");
+      wrapper.className = `message message--${role}`;
+      wrapper.innerHTML = `<strong>${role === "user" ? "你" : "助手"}</strong><p>${text}</p>`;
+      chatLog.appendChild(wrapper);
+      chatLog.scrollTop = chatLog.scrollHeight;
+    };
+
+    sendButton?.addEventListener("click", sendMessage);
+
+    async function sendMessage() {
+      if (!(inputBox instanceof HTMLTextAreaElement)) return;
+      const prompt = inputBox.value.trim();
+      if (!prompt) return;
+
+      appendMessage("user", prompt);
+      inputBox.value = "";
+
+      try {
+        const res = await fetch("http://localhost:11434/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt }),
+        });
+
+        if (!res.ok) {
+          appendMessage("bot", `API 错误：${res.status} ${res.statusText}`);
+          return;
         }
-        .chat-box {
-            max-width: 720px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            padding: 1rem;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-        }
-        .message {
-            margin: 0.5rem 0;
-        }
-        .user {
-            color: #2b6cb0;
-            font-weight: bold;
-        }
-        .bot {
-            color: #38a169;
-            font-weight: bold;
-        }
-        textarea {
-            width: 98%;
-            padding: 0.5rem;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            font-size: 1rem;
-        }
-        button {
-            margin-top: 0.5rem;
-            padding: 0.5rem 1rem;
-            border: none;
-            background: #3182ce;
-            color: white;
-            font-size: 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
 
-    <div class="chat-box">
-        <h2>🤖 本地大模型</h2>
-        <div id="chat-log"></div>
-        <textarea id="input" rows="10" placeholder="请输入你的问题"></textarea>
-        <button id="sendButton">发送</button>
-    </div>
+        const data = await res.json();
+        const text = data?.choices?.[0]?.text ?? "接口返回了空内容。";
+        appendMessage("bot", text);
+      } catch (error) {
+        appendMessage("bot", `请求失败：${error instanceof Error ? error.message : "未知错误"}`);
+      }
+    }
+  </script>
+</Layout>
 
-    <script type="module">
-        const chatLog = document.getElementById('chat-log');
-        const inputBox = document.getElementById('input');
-        const sendButton = document.getElementById('sendButton');
+<style>
+  .llm-hero {
+    display: grid;
+    gap: 0.75rem;
+  }
 
-        sendButton.addEventListener('click', sendMessage);
+  .llm-panel {
+    display: grid;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: var(--surface-strong);
+  }
 
-        async function sendMessage() {
-            if (!inputBox) return;
-            const prompt = /** @type {HTMLTextAreaElement} */ (inputBox).value.trim();
-            if (!prompt) return;
+  .chat-log {
+    display: grid;
+    gap: 0.75rem;
+    min-height: 12rem;
+    max-height: 28rem;
+    overflow-y: auto;
+  }
 
-            // 显示用户输入
-            chatLog.innerHTML += `<div class="message"><span class="user">你：</span> ${prompt}</div>`;
-            inputBox.value = ''; // 清空输入框
+  .message {
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.95rem 1rem;
+    border-radius: 1rem;
+    background: var(--surface-muted);
+  }
 
-            try {
-              const res = await fetch('http://localhost:11434/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt })
-              });
+  .message strong {
+    color: var(--accent-strong);
+  }
 
-              if (!res.ok) {
-                chatLog.innerHTML += `<div class="message"><span class="bot">错误：</span> API 错误：${res.status} ${res.statusText}</div>`;
-                return;
-              }
+  .llm-field {
+    display: grid;
+    gap: 0.55rem;
+  }
 
-              const data = await res.json();
-              console.log(data); // 打印 JSON 数据
-              const text = data.choices[0].text; // 提取 text
-              chatLog.innerHTML += `<div class="message"><span class="bot">助手：</span> ${text}</div>`;
-            } catch (error) {
-              chatLog.innerHTML += `<div class="message"><span class="bot">错误：</span> JSON 解析失败：${error.message}</div>`;
-            }
+  textarea {
+    width: 100%;
+    resize: vertical;
+    padding: 1rem;
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+  }
 
-            chatLog.scrollTop = chatLog.scrollHeight; // 自动滚动到底部
-        }
-    </script>
+  textarea:focus {
+    border-color: rgba(31, 143, 255, 0.5);
+    box-shadow: 0 0 0 4px rgba(31, 143, 255, 0.12);
+  }
 
-</body>
-</html>
+  .llm-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  button {
+    padding: 0.85rem 1.2rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+  }
+</style>

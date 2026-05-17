@@ -1,38 +1,86 @@
 ---
 import "../styles/global.css";
 import ThemeToggle from "../components/ThemeToggle.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "AntZ Blog",
+  description = "记录思考、构建知识、探索可能。",
+} = Astro.props;
+
+const pathname = Astro.url.pathname;
+const navItems = [
+  { href: "/", label: "首页" },
+  { href: "/blog", label: "博客" },
+  { href: "/llm", label: "AI 实验室" },
+  { href: "https://github.com/antzw", label: "GitHub", external: true },
+];
 ---
 
-<html lang="zh">
+<!DOCTYPE html>
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
-    <title><slot name="title" />Kevin‘s Blog</slot></title>
-  
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
     <script is:inline>
-      (function() {
+      (() => {
         const savedTheme = localStorage.getItem("theme");
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         const theme = savedTheme || (prefersDark ? "dark" : "light");
         document.documentElement.setAttribute("data-theme", theme);
       })();
     </script>
-
   </head>
   <body>
-    <header>
-      <h1>✨Kevin‘s Blog🪐</h1>
-      <nav>
-        <a href="/">主页</a>  |  
-        <a href="/blog">博客</a>  |  
-        <a href="/llm">Ai助手</a>  |
-        <ThemeToggle /> <!-- 插入暗黑模式按钮组件-->
-      </nav>
+    <header class="site-header">
+      <div class="site-shell">
+        <div class="site-header__inner">
+          <a class="brand" href="/">
+            <span class="brand__name">AntZ Blog</span>
+            <span class="brand__tagline">简约、清楚、专注内容体验</span>
+          </a>
+
+          <nav class="site-nav" aria-label="主导航">
+            {navItems.map((item) => {
+              const isCurrent =
+                !item.external &&
+                (pathname === item.href || (item.href !== "/" && pathname.startsWith(`${item.href}/`)));
+              return (
+                <a
+                  href={item.href}
+                  aria-current={isCurrent ? "page" : undefined}
+                  target={item.external ? "_blank" : undefined}
+                  rel={item.external ? "noreferrer" : undefined}
+                >
+                  {item.label}
+                </a>
+              );
+            })}
+            <ThemeToggle />
+          </nav>
+        </div>
+      </div>
     </header>
 
-    <main>
-      <slot />
+    <main class="site-main">
+      <div class="site-shell">
+        <slot />
+      </div>
     </main>
-    
-    <footer>©️ 2025 antz</footer>
+
+    <footer class="site-footer">
+      <div class="site-shell">
+        <div class="site-footer__inner">
+          <span>© 2026 AntZ. 用 Astro 构建，聚焦写作与学习。</span>
+          <span>快速加载、清晰结构、可持续维护。</span>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

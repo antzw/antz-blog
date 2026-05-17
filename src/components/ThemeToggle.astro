@@ -2,41 +2,26 @@
 const htmlId = "theme-toggle";
 ---
 
+<button id={htmlId} type="button" aria-label="切换主题">🌙</button>
 
-<button id={htmlId} aria-label="切换夜间模式">🌙</button>
-
-
-<script>
+<script is:inline>
   const html = document.documentElement;
-  
-  //页面加载时读区本地储存的主题设置，避免闪白;
   const toggleButton = document.getElementById("theme-toggle");
 
-  // 获取本地主题或系统默认
-  const savedTheme = localStorage.getItem("theme");
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-  // 初始化主题
-  if(savedTheme) { 
-    html.setAttribute("data-theme", savedTheme);
-  } else {
-    html.setAttribute("data-theme", prefersDark ? "dark" : "light");
-  }
-
-  // 更新图标函数
   const updateIcon = () => {
+    if (!toggleButton) return;
     const isDark = html.getAttribute("data-theme") === "dark";
-    toggleButton.textContent = isDark ? "🔆" : "🌙";
+    toggleButton.textContent = isDark ? "☀️" : "🌙";
+    toggleButton.setAttribute("aria-label", isDark ? "切换到亮色模式" : "切换到暗色模式");
   };
 
-  updateIcon(); // 页面加载时初始化按钮状态
-  
-  //切换主题事件
+  updateIcon();
+
   toggleButton?.addEventListener("click", () => {
     const isDark = html.getAttribute("data-theme") === "dark";
-    const newTheme = isDark ? "light" : "dark";
-    html.setAttribute("data-theme", newTheme);
-    localStorage.setItem("theme", newTheme);
+    const nextTheme = isDark ? "light" : "dark";
+    html.setAttribute("data-theme", nextTheme);
+    localStorage.setItem("theme", nextTheme);
     updateIcon();
   });
 </script>
