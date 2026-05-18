@@ -2,17 +2,26 @@
 const htmlId = "theme-toggle";
 ---
 
-<button id={htmlId} type="button" aria-label="切换主题">🌙</button>
+<!-- Theme toggle switch -->
+<button id={htmlId} class="theme-switch" type="button" aria-label="切换主题" aria-pressed="false">
+  <span class="theme-switch__track">
+    <span class="theme-switch__thumb">
+      <span class="theme-switch__icon theme-switch__icon--light">☀</span>
+      <span class="theme-switch__icon theme-switch__icon--dark">☾</span>
+    </span>
+  </span>
+</button>
 
 <script is:inline>
+  // Toggle `data-theme` on the root element and keep ARIA state in sync.
   const html = document.documentElement;
   const toggleButton = document.getElementById("theme-toggle");
 
   const updateIcon = () => {
     if (!toggleButton) return;
     const isDark = html.getAttribute("data-theme") === "dark";
-    toggleButton.textContent = isDark ? "☀️" : "🌙";
     toggleButton.setAttribute("aria-label", isDark ? "切换到亮色模式" : "切换到暗色模式");
+    toggleButton.setAttribute("aria-pressed", String(isDark));
   };
 
   updateIcon();

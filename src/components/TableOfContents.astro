@@ -1,0 +1,168 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings?: Heading[];
+}
+
+const { headings = [] } = Astro.props;
+const tocHeadings = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+---
+
+<!-- Table of contents rendered from h2/h3 headings -->
+{tocHeadings.length > 0 && (
+  <aside class="toc" aria-label="文章目录">
+    <h2>目录</h2>
+    <nav>
+      {tocHeadings.map((heading) => (
+        <a
+          class:list={[heading.depth === 3 && "toc__link--nested"]}
+          href={`#${heading.slug}`}
+          data-toc-link
+          data-heading-id={heading.slug}
+        >
+          {heading.text}
+        </a>
+      ))}
+    </nav>
+  </aside>
+)}
+
+<script is:inline>
+  // Collect TOC links and measure header height for precise scrolling.
+  const tocLinks = Array.from(document.querySelectorAll("[data-toc-link]"));
+  const siteHeader = document.querySelector(".site-header");
+
+  const getHeaderOffset = () => {
+    const headerHeight = siteHeader instanceof HTMLElement ? siteHeader.getBoundingClientRect().height : 0;
+    return headerHeight + 16;
+  };
+
+  const setActiveTocLink = (id) => {
+    tocLinks.forEach((link) => {
+      const active = link.getAttribute("data-heading-id") === id;
+      link.classList.toggle("is-active", active);
+      if (active) {
+        link.setAttribute("aria-current", "location");
+      } else {
+        link.removeAttribute("aria-current");
+      }
+    });
+  };
+
+  tocLinks.forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const id = link.getAttribute("data-heading-id");
+      const target = id ? document.getElementById(id) : null;
+      if (!target) return;
+
+      event.preventDefault();
+      const top = target.getBoundingClientRect().top + window.scrollY - getHeaderOffset();
+      window.scrollTo({ top, behavior: "smooth" });
+      history.pushState(null, "", `#${id}`);
+      setActiveTocLink(id);
+    });
+  });
+
+  const headings = tocLinks
+    .map((link) => document.getElementById(link.getAttribute("data-heading-id") || ""))
+    .filter((heading) => heading instanceof HTMLElement);
+
+  const updateActiveHeading = () => {
+    let current = headings[0];
+    const offset = getHeaderOffset() + 8;
+
+    headings.forEach((heading) => {
+      if (heading.getBoundingClientRect().top <= offset) {
+        current = heading;
+      }
+    });
+
+    if (current?.id) setActiveTocLink(current.id);
+  };
+
+  updateActiveHeading();
+  window.addEventListener("scroll", updateActiveHeading, { passive: true });
+  window.addEventListener("resize", updateActiveHeading);
+</script>
+
+<style>
+  /* TOC container */
+  .toc {
+    display: grid;
+    gap: 0.8rem;
+    align-self: start;
+    position: sticky;
+    top: 6.2rem;
+    padding: 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .toc h2 {
+    font-size: 0.95rem;
+  }
+
+  .toc nav {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  /* TOC links */
+  .toc a {
+    position: relative;
+    color: var(--text-soft);
+    font-size: 0.9rem;
+    line-height: 1.45;
+    transition: color var(--transition), transform var(--transition);
+  }
+
+  .toc a:hover,
+  .toc a.is-active {
+    color: var(--accent-strong);
+  }
+
+  .toc a.is-active {
+    transform: translateX(0.3rem);
+  }
+
+  .toc a.is-active::before {
+    content: "";
+    position: absolute;
+    left: -0.7rem;
+    top: 0.62em;
+    width: 0.42rem;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--accent);
+  }
+
+  /* Nested heading links (h3) */
+  .toc__link--nested {
+    padding-left: 0.8rem;
+    border-left: 1px solid var(--line);
+  }
+
+  @media (max-width: 1080px) {
+    .toc {
+      position: static;
+      order: -1;
+    }
+
+    .toc nav {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 720px) {
+    .toc {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,104 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const projects = [
+  {
+    type: "Web",
+    name: "Astro 个人知识主页",
+    description: "把博客、项目、论文和简历整合成长期维护的个人内容系统。",
+    stack: ["Astro", "MDX", "CSS"],
+    status: "建设中",
+  },
+  {
+    type: "AI",
+    name: "本地大模型交互实验",
+    description: "探索本地模型、脚本工具和内容生产流程的结合方式。",
+    stack: ["Python", "LLM", "Automation"],
+    status: "实验中",
+  },
+  {
+    type: "Tools",
+    name: "博客搜索与标签系统",
+    description: "基于构建期索引和 Fuse.js 提供离线搜索、多标签筛选。",
+    stack: ["Fuse.js", "Astro", "Content Collections"],
+    status: "可用",
+  },
+];
+---
+
+<Layout title="项目 | AntZ Blog" description="AntZ 的项目索引与作品记录。">
+  <div class="page-stack">
+    <!-- Hero: project overview -->
+    <section class="panel hero-panel page-hero">
+      <p class="eyebrow">Projects</p>
+      <h1 class="hero-title">项目索引</h1>
+      <p class="muted">这里先放置结构化占位项目，后续可以逐步替换为真实作品、源码链接、演示地址和复盘文章。</p>
+    </section>
+
+    <!-- Project cards grid -->
+    <section class="content-grid">
+      {projects.map((project) => (
+        <article class="panel content-card">
+          <div class="content-card__meta">
+            <span class="chip chip--accent">{project.type}</span>
+            <span class="chip">{project.status}</span>
+          </div>
+          <h2>{project.name}</h2>
+          <p class="muted">{project.description}</p>
+          <div class="chip-list">
+            {project.stack.map((item) => (
+              <span class="chip">{item}</span>
+            ))}
+          </div>
+          <span class="placeholder-link">链接待补充</span>
+        </article>
+      ))}
+    </section>
+  </div>
+</Layout>
+
+<style>
+  /* Hero section layout */
+  .page-hero {
+    display: grid;
+    gap: 1rem;
+  }
+
+  /* Keep the lead text readable */
+  .page-hero p:last-child {
+    max-width: 50rem;
+  }
+
+  /* Three-column card grid */
+  .content-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  /* Individual project card */
+  .content-card {
+    display: grid;
+    gap: 0.9rem;
+    padding: 1.25rem;
+  }
+
+  /* Meta row for type and status */
+  .content-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  /* Placeholder metadata text */
+  .placeholder-link {
+    color: var(--text-faint);
+    font-size: 0.92rem;
+  }
+
+  @media (max-width: 900px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,5 +1,7 @@
 ---
 import { type CollectionEntry, getCollection, render } from "astro:content";
+import BlogSidebar from "../../components/BlogSidebar.astro";
+import TableOfContents from "../../components/TableOfContents.astro";
 import Layout from "../../layouts/Layout.astro";
 
 export async function getStaticPaths() {
@@ -12,41 +14,63 @@ export async function getStaticPaths() {
 
 type Props = CollectionEntry<"blog">;
 const post = Astro.props as Props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 const tags = post.data.tags ?? [];
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+const tocHeadings = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
 ---
 
 <Layout title={`${post.data.title} | AntZ Blog`} description={post.data.description}>
-  <article class="article-page page-stack">
-    <header class="panel hero-panel article-hero prose">
-      <p class="eyebrow">Article</p>
-      <h1>{post.data.title}</h1>
-      <p class="muted article-hero__description">{post.data.description}</p>
+  <div class:list={["article-layout", tocHeadings.length === 0 && "article-layout--no-toc"]}>
+    <BlogSidebar posts={posts} currentSlug={post.slug} variant="article" />
 
-      <div class="article-hero__meta">
-        <span class="chip chip--accent">{post.data.pubDate.toLocaleDateString("zh-CN")}</span>
-        {tags.map((tag) => (
-          <span class="chip">#{tag}</span>
-        ))}
-      </div>
-    </header>
+    <article class="panel article-page">
+      <header class="article-hero prose">
+        <p class="eyebrow">Article</p>
+        <h1>{post.data.title}</h1>
+        <p class="muted article-hero__description">{post.data.description}</p>
 
-    <section class="panel article-content">
-      <div class="prose article-content__inner">
+        <div class="article-hero__meta">
+          <span class="chip chip--accent">{post.data.pubDate.toLocaleDateString("zh-CN")}</span>
+          {tags.map((tag) => (
+            <span class="chip">#{tag}</span>
+          ))}
+        </div>
+      </header>
+
+      <div class="prose article-content">
         <Content />
       </div>
-    </section>
-  </article>
+    </article>
+
+    <TableOfContents headings={tocHeadings} />
+  </div>
 </Layout>
 
 <style>
+  .article-layout {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.28fr) minmax(0, var(--reading-width)) minmax(180px, 0.24fr);
+    gap: 1.25rem;
+    align-items: start;
+    justify-content: center;
+  }
+
+  .article-layout--no-toc {
+    grid-template-columns: minmax(220px, 0.28fr) minmax(0, var(--reading-width));
+  }
+
   .article-page {
-    gap: 1rem;
+    padding: clamp(1.2rem, 2vw, 2rem);
+    background: var(--surface-strong);
   }
 
   .article-hero {
     display: grid;
     gap: 1rem;
+    margin-bottom: 1.8rem;
   }
 
   .article-hero__description {
@@ -60,17 +84,19 @@ const tags = post.data.tags ?? [];
   }
 
   .article-content {
-    padding: clamp(1.1rem, 2vw, 1.8rem);
-    background: var(--surface-strong);
-  }
-
-  .article-content__inner {
     color: var(--text);
   }
 
-  .article-content__inner :global(h2),
-  .article-content__inner :global(h3),
-  .article-content__inner :global(h4) {
+  .article-content :global(h2),
+  .article-content :global(h3),
+  .article-content :global(h4) {
     margin-top: 2rem;
+  }
+
+  @media (max-width: 1080px) {
+    .article-layout,
+    .article-layout--no-toc {
+      grid-template-columns: 1fr;
+    }
   }
   </style>

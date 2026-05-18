@@ -1,5 +1,7 @@
 ---
 import "../styles/global.css";
+import BackToTop from "../components/BackToTop.astro";
+import ContactLinks from "../components/ContactLinks.astro";
 import ThemeToggle from "../components/ThemeToggle.astro";
 
 interface Props {
@@ -14,13 +16,14 @@ const {
 
 const pathname = Astro.url.pathname;
 const navItems = [
-  { href: "/", label: "首页" },
+  { href: "/", label: "/" },
   { href: "/blog", label: "博客" },
-  { href: "/llm", label: "AI 实验室" },
-  { href: "https://github.com/antzw", label: "GitHub", external: true },
+  { href: "/projects", label: "项目" },
+  { href: "/papers", label: "论文" },
+  { href: "/resume", label: "简历" },
 ];
 ---
-
+<!-- Layout component: global shell, header/navigation, page slot, footer, and utilities like theme toggle and back-to-top -->
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
@@ -38,6 +41,7 @@ const navItems = [
     </script>
   </head>
   <body>
+    <!-- Site header: brand + main navigation + theme toggle -->
     <header class="site-header">
       <div class="site-shell">
         <div class="site-header__inner">
@@ -68,19 +72,26 @@ const navItems = [
       </div>
     </header>
 
+    <!-- Main content area: page-specific content is rendered into the slot -->
     <main class="site-main">
       <div class="site-shell">
         <slot />
       </div>
     </main>
 
+    <!-- Footer: copyright and contact links -->
     <footer class="site-footer">
       <div class="site-shell">
         <div class="site-footer__inner">
-          <span>© 2026 AntZ. 用 Astro 构建，聚焦写作与学习。</span>
-          <span>快速加载、清晰结构、可持续维护。</span>
+          <div class="site-footer__copy">
+            <span>© 2026 AntZ. 用 Astro 构建，聚焦写作与学习。</span>
+            <span>快速加载、清晰结构、可持续维护。</span>
+          </div>
+          <ContactLinks />
         </div>
       </div>
     </footer>
+
+    <BackToTop />
   </body>
 </html>

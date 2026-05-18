@@ -3,6 +3,7 @@ import SearchBox from "../components/SearchBox.astro";
 import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import BlogCard from "../components/BlogCard.astro";
+import BlogSidebar from "../components/BlogSidebar.astro";
 
 const posts = (await getCollection("blog")).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
@@ -13,6 +14,7 @@ const allTags = [...new Set(posts.flatMap((post) => post.data.tags ?? []))].sort
 );
 
 const featuredPosts = posts.slice(0, 3);
+const archiveYears = [...new Set(posts.map((post) => post.data.pubDate.getFullYear()))];
 const searchData = posts.map((post) => ({
   slug: `/blog/${post.slug}/`,
   title: post.data.title,
@@ -23,89 +25,112 @@ const searchData = posts.map((post) => ({
 ---
 
 <Layout title="博客 | AntZ Blog" description="简约、清楚、现代化的博客内容首页。">
-  <div class="page-stack">
-    <section class="panel hero-panel blog-hero">
-      <div class="blog-hero__content">
-        <div class="section-grid">
-          <p class="eyebrow">Editorial Blog</p>
-          <h1 class="hero-title">一个更轻、更清楚、更现代的博客首页。</h1>
-          <p class="muted blog-hero__lead">
-            去掉拖慢加载的大背景图，保留内容本身的层次感。这里聚合最新文章、标签入口和快速搜索，阅读路径更直接。
-          </p>
-        </div>
+  <div class="blog-layout">
+    <BlogSidebar posts={posts} tags={allTags} variant="blog" />
 
-        <div class="blog-hero__actions">
-          <a class="button-link" href="#post-grid">开始阅读</a>
-          <a class="button-link button-link--ghost" href="/">返回首页</a>
-        </div>
-      </div>
-
-      <div class="metrics">
-        <div class="metric">
-          <strong>{posts.length}</strong>
-          <span class="muted">已发布文章</span>
-        </div>
-        <div class="metric">
-          <strong>{allTags.length}</strong>
-          <span class="muted">主题标签</span>
-        </div>
-        <div class="metric">
-          <strong>{posts[0]?.data.pubDate.toLocaleDateString("zh-CN") ?? "待更新"}</strong>
-          <span class="muted">最近更新</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="blog-highlights">
-      {featuredPosts.map((post, index) => (
-        <a class="highlight-card panel" href={`/blog/${post.slug}/`}>
-          <span class="highlight-card__index">0{index + 1}</span>
-          <div>
-            <h2>{post.data.title}</h2>
-            <p class="muted">{post.data.description}</p>
+    <div class="page-stack">
+      <section class="panel hero-panel blog-hero">
+        <div class="blog-hero__content">
+          <div class="section-grid">
+            <p class="eyebrow">Editorial Blog</p>
+            <h1 class="hero-title">全部博客文章。</h1>
+            <p class="muted blog-hero__lead">
+              这里保留搜索、标签和精选文章，但把版面重心放回内容列表。标签筛选使用 AND 逻辑，适合逐步收窄主题。
+            </p>
           </div>
-        </a>
-      ))}
-    </section>
-
-    <SearchBox tags={allTags} searchData={searchData} />
-
-    <section class="post-section">
-      <div class="post-section__header">
-        <div>
-          <p class="eyebrow">Archive</p>
-          <h2>全部文章</h2>
         </div>
-        <p class="muted">默认按发布时间倒序排列，适合从最新内容开始浏览。</p>
-      </div>
 
-      <div id="post-grid" class="post-grid">
-        {posts.map((post) => (
-          <BlogCard
-            title={post.data.title}
-            description={post.data.description}
-            pubDate={post.data.pubDate}
-            cover={post.data.cover}
-            tags={post.data.tags}
-            href={`/blog/${post.slug}/`}
-          />
+        <div class="metrics">
+          <div class="metric">
+            <strong>{posts.length}</strong>
+            <span class="muted">已发布文章</span>
+          </div>
+          <div class="metric">
+            <strong>{allTags.length}</strong>
+            <span class="muted">主题标签</span>
+          </div>
+          <div class="metric">
+            <strong>{posts[0]?.data.pubDate.toLocaleDateString("zh-CN") ?? "待更新"}</strong>
+            <span class="muted">最近更新</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="blog-highlights" aria-label="精选文章">
+        <div class="blog-highlights__header">
+          <div>
+            <p class="eyebrow">Featured Blog</p>
+            <h2>精选文章</h2>
+          </div>
+          <p class="muted">这里展示我们精心挑选的优质文章。</p>
+        </div>
+
+        <div class="blog-highlights__grid">
+          {featuredPosts.map((post, index) => (
+            <a class="highlight-card panel" href={`/blog/${post.slug}/`}>
+              <span class="highlight-card__index">0{index + 1}</span>
+              <div>
+                <h3>{post.data.title}</h3>
+                <p class="muted">{post.data.description}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section class="post-section">
+        <div class="post-section__header">
+          <div>
+            <p class="eyebrow">Archive</p>
+            <h2>全部文章</h2>
+          </div>
+          <p class="muted">默认按发布时间倒序排列，筛选结果会在本列表中即时更新。</p>
+        </div>
+
+        {archiveYears.map((year) => (
+          <div id={`archive-${year}`} class="archive-anchor" aria-hidden="true"></div>
         ))}
-      </div>
-    </section>
+
+        <div id="post-grid" class="post-grid">
+          {posts.map((post) => (
+            <BlogCard
+              title={post.data.title}
+              description={post.data.description}
+              pubDate={post.data.pubDate}
+              cover={post.data.cover}
+              tags={post.data.tags}
+              href={`/blog/${post.slug}/`}
+              filterTags
+            />
+          ))}
+        </div>
+
+        <p id="blog-empty-state" class="panel blog-empty-state" hidden>
+          没有匹配的文章。减少标签条件或清空搜索后再试。
+        </p>
+      </section>
+
+      <SearchBox searchData={searchData} />
+    </div>
   </div>
 </Layout>
 
 <style>
+  .blog-layout {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.32fr) minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+  }
+
   .blog-hero {
     display: grid;
-    gap: 1.5rem;
+    gap: 1.2rem;
   }
 
   .blog-hero__content {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    gap: 1.5rem;
+    display: grid;
+    gap: 1rem;
   }
 
   .blog-hero__lead {
@@ -113,13 +138,23 @@ const searchData = posts.map((post) => ({
     font-size: 1.05rem;
   }
 
-  .blog-hero__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
+  .blog-highlights {
+    display: grid;
+    gap: 1rem;
   }
 
-  .blog-highlights {
+  .blog-highlights__header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .blog-highlights__header h2 {
+    margin-top: 0.45rem;
+  }
+
+  .blog-highlights__grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
@@ -171,14 +206,30 @@ const searchData = posts.map((post) => ({
     gap: 1rem;
   }
 
+  .blog-empty-state {
+    padding: 1.1rem 1.2rem;
+    color: var(--text-soft);
+  }
+
+  .archive-anchor {
+    scroll-margin-top: 8rem;
+  }
+
+  @media (max-width: 1080px) {
+    .blog-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
   @media (max-width: 900px) {
-    .blog-highlights {
+    .blog-highlights__grid {
       grid-template-columns: 1fr;
     }
   }
 
   @media (max-width: 720px) {
     .blog-hero__content,
+    .blog-highlights__header,
     .post-section__header {
       flex-direction: column;
       align-items: start;

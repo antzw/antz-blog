@@ -1,0 +1,108 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const skills = ["Astro", "TypeScript", "内容系统", "AI 工具", "自动化脚本", "前端工程"];
+const experiences = [
+  {
+    title: "个人知识主页维护",
+    period: "2025 - 现在",
+    description: "持续建设博客、项目、论文和简历的一体化公开主页。",
+  },
+  {
+    title: "Astro 博客系统实践",
+    period: "2025",
+    description: "从内容集合、动态路由、搜索、暗色模式到阅读布局逐步完善个人博客。",
+  },
+];
+---
+
+<Layout title="简历 | AntZ Blog" description="AntZ 的个人简介、技能和经历。">
+  <div class="resume-layout">
+    <!-- Hero: personal summary -->
+    <section class="panel hero-panel resume-hero">
+      <p class="eyebrow">Resume</p>
+      <h1 class="hero-title">AntZ</h1>
+      <p class="muted">关注 Web 内容工程、AI 工具链和个人知识系统。这里先保留简历结构，真实经历和 PDF 可后续补充。</p>
+      <button class="button-link resume-download" type="button" disabled>PDF 待上传</button>
+    </section>
+
+    <!-- Skills section -->
+    <section class="panel resume-section">
+      <h2>技能</h2>
+      <div class="chip-list">
+        {skills.map((skill) => (
+          <span class="chip">{skill}</span>
+        ))}
+      </div>
+    </section>
+
+    <!-- Experience timeline -->
+    <section class="panel resume-section">
+      <h2>经历</h2>
+      <div class="timeline">
+        {experiences.map((item) => (
+          <article>
+            <span class="muted">{item.period}</span>
+            <h3>{item.title}</h3>
+            <p class="muted">{item.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Projects and education summary -->
+    <section class="panel resume-section">
+      <h2>项目与教育</h2>
+      <p class="muted">项目细节见项目页。教育、证书和可公开履历信息待补充。</p>
+      <a class="text-link" href="/projects">查看项目页</a>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  /* Main resume stack */
+  .resume-layout {
+    display: grid;
+    gap: 1rem;
+  }
+
+  /* Shared spacing for hero, sections, and timeline */
+  .resume-hero,
+  .resume-section,
+  .timeline {
+    display: grid;
+    gap: 1rem;
+  }
+
+  /* Keep the summary paragraph readable */
+  .resume-hero p {
+    max-width: 50rem;
+  }
+
+  /* Disabled download button styling */
+  .resume-download {
+    width: fit-content;
+    opacity: 0.58;
+    cursor: not-allowed;
+  }
+
+  /* Section padding */
+  .resume-section {
+    padding: 1.25rem;
+  }
+
+  /* Timeline entries */
+  .timeline article {
+    display: grid;
+    gap: 0.35rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+
+  /* Secondary link */
+  .text-link {
+    width: fit-content;
+    color: var(--accent-strong);
+    font-weight: 700;
+  }
+</style>

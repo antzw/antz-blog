@@ -6,9 +6,10 @@ interface Props {
   cover?: string;
   tags?: string[];
   href: string;
+  filterTags?: boolean;
 }
 
-const { title, description, pubDate, cover, tags = [], href } = Astro.props;
+const { title, description, pubDate, cover, tags = [], href, filterTags = false } = Astro.props;
 
 const date = typeof pubDate === "string" ? new Date(pubDate) : pubDate;
 const formattedDate = Number.isNaN(date.getTime())
@@ -20,27 +21,34 @@ const formattedDate = Number.isNaN(date.getTime())
     });
 ---
 
-<a class="blog-card" href={href} data-post-card data-slug={href} data-tags={tags.join("|").toLowerCase()}>
-  <article class="blog-card__inner">
+  <!-- Reusable article preview card -->
+<article class="blog-card" data-post-card data-slug={href} data-tags={tags.join("|").toLowerCase()}>
+  <div class="blog-card__inner">
     <div class="blog-card__body">
       <div class="blog-card__meta">
         <span>{formattedDate}</span>
         {tags.length > 0 && <span>{tags.length} 个标签</span>}
       </div>
 
-      <h3 class="blog-card__title">{title}</h3>
+      <h3 class="blog-card__title">
+        <a href={href}>{title}</a>
+      </h3>
 
       {description && <p class="blog-card__description">{description}</p>}
 
       {tags.length > 0 && (
         <div class="blog-card__tags">
           {tags.map((tag) => (
-            <span class="blog-card__tag">#{tag}</span>
+            filterTags ? (
+              <button type="button" class="blog-card__tag" data-card-tag={tag.toLowerCase()}>#{tag}</button>
+            ) : (
+              <span class="blog-card__tag">#{tag}</span>
+            )
           ))}
         </div>
       )}
 
-      <span class="blog-card__link">阅读全文</span>
+      <a class="blog-card__link" href={href}>阅读全文</a>
     </div>
 
     <div class:list={["blog-card__cover", !cover && "blog-card__cover--placeholder"]}>
@@ -53,14 +61,16 @@ const formattedDate = Number.isNaN(date.getTime())
         </div>
       )}
     </div>
-  </article>
-</a>
+  </div>
+</article>
 
 <style>
+  /* Card wrapper */
   .blog-card {
     display: block;
   }
 
+  /* Main two-column card layout */
   .blog-card__inner {
     display: grid;
     grid-template-columns: minmax(0, 1.45fr) minmax(220px, 0.95fr);
@@ -73,18 +83,21 @@ const formattedDate = Number.isNaN(date.getTime())
     transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
   }
 
+  /* Hover interaction */
   .blog-card:hover .blog-card__inner {
     transform: translateY(-2px);
     border-color: var(--line-strong);
     box-shadow: var(--shadow-lg);
   }
 
+  /* Text content column */
   .blog-card__body {
     display: flex;
     flex-direction: column;
     gap: 0.85rem;
   }
 
+  /* Meta row (date + tag count) */
   .blog-card__meta {
     display: flex;
     flex-wrap: wrap;
@@ -93,41 +106,62 @@ const formattedDate = Number.isNaN(date.getTime())
     font-size: 0.92rem;
   }
 
+  /* Title typography */
   .blog-card__title {
     font-size: clamp(1.25rem, 2vw, 1.55rem);
+  }
+
+  .blog-card__title a:hover {
+    color: var(--accent-strong);
   }
 
   .blog-card__description {
     color: var(--text-soft);
   }
 
+  /* Tags row */
   .blog-card__tags {
     display: flex;
     flex-wrap: wrap;
     gap: 0.55rem;
   }
 
+  /* Shared tag style for span/button variants */
   .blog-card__tag {
     display: inline-flex;
     align-items: center;
     padding: 0.35rem 0.7rem;
+    border: 0;
     border-radius: 999px;
     background: var(--surface-muted);
     color: var(--text-soft);
     font-size: 0.86rem;
+    transition: background-color var(--transition), color var(--transition);
   }
 
+  button.blog-card__tag {
+    cursor: pointer;
+  }
+
+  button.blog-card__tag:hover {
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+  }
+
+  /* Read more link */
   .blog-card__link {
+    width: fit-content;
     margin-top: auto;
     color: var(--accent-strong);
     font-weight: 700;
   }
 
+  /* Cover media container */
   .blog-card__cover {
     min-height: 220px;
     overflow: hidden;
     border-radius: calc(var(--radius-lg) - 8px);
-    background: linear-gradient(135deg, #cfe8ff 0%, #f7f0b8 100%);
+    background: var(--surface-accent);
   }
 
   .blog-card__cover img {
@@ -142,13 +176,14 @@ const formattedDate = Number.isNaN(date.getTime())
     justify-content: center;
   }
 
+  /* Placeholder cover content */
   .blog-card__fallback {
     display: grid;
     gap: 0.45rem;
     place-items: center;
-    color: rgba(18, 58, 95, 0.8);
+    color: var(--accent-strong);
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0;
   }
 
   .blog-card__fallback strong {
