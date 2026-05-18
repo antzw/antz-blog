@@ -1,6 +1,6 @@
 ---
 interface SidebarPost {
-  slug: string;
+  id: string;
   data: {
     title: string;
     pubDate: Date;
@@ -75,7 +75,7 @@ const years = [...new Set(posts.map((post) => post.data.pubDate.getFullYear()))]
         <h2>近期文档</h2>
         <div class="blog-sidebar__recent">
           {recentPosts.map((post) => (
-            <a href={`/blog/${post.slug}/`}>
+            <a href={`/blog/${post.id}/`}>
               <span>{post.data.title}</span>
               <small>{post.data.pubDate.toLocaleDateString("zh-CN")}</small>
             </a>
@@ -88,7 +88,7 @@ const years = [...new Set(posts.map((post) => post.data.pubDate.getFullYear()))]
       <a class="blog-sidebar__title-link" href="/blog">全部文档</a>
       <div class="blog-sidebar__docs">
         {posts.map((post) => (
-          <a class:list={[post.slug === currentSlug && "is-active"]} href={`/blog/${post.slug}/`}>
+          <a class:list={[post.id === currentSlug && "is-active"]} href={`/blog/${post.id}/`}>
             <span>{post.data.title}</span>
             <small>{post.data.pubDate.toLocaleDateString("zh-CN")}</small>
           </a>

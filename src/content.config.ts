@@ -1,11 +1,15 @@
 import { defineCollection, z } from "astro:content";
+import { glob } from "astro/loaders";
 
-//z是Zod，一个强大的数据验证库
 const blog = defineCollection({
+  loader: glob({
+    pattern: ["**/*.md", "**/*.mdx"],
+    base: "./src/content/blog",
+  }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    pubDate: z.date(),  // 自动校验是否是合法日期
+    pubDate: z.date(),
     tags: z.array(z.string()).optional(),
     cover: z.string().optional(),
   }),
@@ -14,4 +18,3 @@ const blog = defineCollection({
 export const collections = {
   blog,
 };
-

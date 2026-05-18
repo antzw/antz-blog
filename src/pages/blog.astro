@@ -16,7 +16,7 @@ const allTags = [...new Set(posts.flatMap((post) => post.data.tags ?? []))].sort
 const featuredPosts = posts.slice(0, 3);
 const archiveYears = [...new Set(posts.map((post) => post.data.pubDate.getFullYear()))];
 const searchData = posts.map((post) => ({
-  slug: `/blog/${post.slug}/`,
+  slug: `/blog/${post.id}/`,
   title: post.data.title,
   description: post.data.description,
   body: post.body ?? "",
@@ -67,7 +67,7 @@ const searchData = posts.map((post) => ({
 
         <div class="blog-highlights__grid">
           {featuredPosts.map((post, index) => (
-            <a class="highlight-card panel" href={`/blog/${post.slug}/`}>
+            <a class="highlight-card panel" href={`/blog/${post.id}/`}>
               <span class="highlight-card__index">0{index + 1}</span>
               <div>
                 <h3>{post.data.title}</h3>
@@ -99,7 +99,7 @@ const searchData = posts.map((post) => ({
               pubDate={post.data.pubDate}
               cover={post.data.cover}
               tags={post.data.tags}
-              href={`/blog/${post.slug}/`}
+              href={`/blog/${post.id}/`}
               filterTags
             />
           ))}

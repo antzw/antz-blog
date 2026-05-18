@@ -7,7 +7,7 @@ export default async function generateSearchIndex() {
   const posts = await getCollection('blog');
 
   const index = posts.map((post) => ({
-    slug: `/blog/${post.slug}/`,
+    slug: `/blog/${post.id}/`,
     title: post.data.title,
     description: post.data.description,
     body: post.body || '', // markdown 原文
