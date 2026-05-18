@@ -126,6 +126,20 @@ textarea {
 /* Brand block in the header */
 .brand {
   display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.brand__icon {
+  width: 2.6rem;
+  height: 2.6rem;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+.brand__text {
+  display: flex;
   flex-direction: column;
   gap: 0.1rem;
 }

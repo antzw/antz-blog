@@ -10,9 +10,10 @@ interface Props {
 }
 
 const { searchData = [] } = Astro.props;
+const searchDataJson = JSON.stringify(searchData).replace(/</g, "\\u003c");
 ---
 
-<script id="blog-search-data" type="application/json" is:inline>{JSON.stringify(searchData)}</script>
+<script id="blog-search-data" type="application/json" set:html={searchDataJson}></script>
 
 <script type="module" is:inline>
   const setupBlogFilters = () => {
@@ -27,7 +28,6 @@ const { searchData = [] } = Astro.props;
     const tagLinks = Array.from(document.querySelectorAll("[data-card-tag]"));
     const clearTagButtons = Array.from(document.querySelectorAll("[data-clear-tags]"));
     const searchDataElement = document.getElementById("blog-search-data");
-    let fuse = null;
     let searchableSlugs = null;
 
     if (!input || cards.length === 0 || !searchDataElement) return;
@@ -97,17 +97,24 @@ const { searchData = [] } = Astro.props;
         applyFilters();
         return;
       }
-
-      if (!fuse) {
-        const { default: Fuse } = await import("fuse.js");
-        const data = JSON.parse(searchDataElement.textContent || "[]");
-        fuse = new Fuse(data, {
-          keys: ["title", "description", "body", "tags"],
-          threshold: 0.32,
-        });
-      }
-
-      searchableSlugs = new Set(fuse.search(query).map((entry) => entry.item.slug));
+      /* Refresh searchable slugs based on current search query */
+      const normalizedQuery = query.toLowerCase();
+      const data = JSON.parse(searchDataElement.textContent || "[]");
+      searchableSlugs = new Set(
+        data
+          .filter((entry) => {
+            const searchableText = [
+              entry.title,
+              entry.description,
+              entry.body,
+              ...(Array.isArray(entry.tags) ? entry.tags : []),
+            ]
+              .join(" ")
+              .toLowerCase();
+            return searchableText.includes(normalizedQuery);
+          })
+          .map((entry) => entry.slug)
+      );
       applyFilters();
     };
 
@@ -140,7 +147,9 @@ const { searchData = [] } = Astro.props;
       refreshSearch();
     });
 
-    resetButton?.addEventListener("click", () => {
+    resetButton?.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
       if (input instanceof HTMLInputElement) input.value = "";
       searchableSlugs = null;
       tagInputs.forEach((tagInput) => {
