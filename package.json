@@ -9,8 +9,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.0",
-    "astro": "^5.12.4",
+    "@astrojs/mdx": "^5.0.1",
+    "astro": "^6.3.5",
     "fuse.js": "^7.1.0"
   },
   "devDependencies": {
