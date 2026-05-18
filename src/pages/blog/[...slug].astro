@@ -24,6 +24,7 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2 || heading.
 
 <Layout title={`${post.data.title} | AntZ Blog`} description={post.data.description}>
   <div class:list={["article-layout", tocHeadings.length === 0 && "article-layout--no-toc"]}>
+    <!-- Article page layout: left sidebar for navigation, main content area, optional right sidebar for TOC -->
     <BlogSidebar posts={posts} currentSlug={post.slug} variant="article" />
 
     <article class="panel article-page">

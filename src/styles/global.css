@@ -12,6 +12,7 @@
   --text: #24211d;
   --text-soft: #6d665c;
   --text-faint: #91887a;
+  --code-bg: #000000bb;
   --accent: #e9782d;
   --accent-strong: #b95013;
   --accent-soft: rgba(233, 120, 45, 0.14);
@@ -37,6 +38,7 @@
   --text: #f3eee7;
   --text-soft: #c8bdb0;
   --text-faint: #9f9386;
+  --code-bg: #1d1b18;
   --accent: #ff9f43;
   --accent-strong: #ffb66b;
   --accent-soft: rgba(255, 159, 67, 0.16);
@@ -360,7 +362,7 @@ pre {
   padding: 1rem 1.1rem;
   overflow-x: auto;
   border-radius: var(--radius-md);
-  background: #1d1b18 !important;
+  background: var(--code-bg) !important;
   color: #f8efe5;
   font-family: var(--font-mono);
   font-size: 0.95rem;

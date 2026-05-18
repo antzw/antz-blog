@@ -18,6 +18,7 @@ interface Props {
 
 const { posts, tags = [], currentSlug = "", showFilters = false } = Astro.props;
 const variant = Astro.props.variant ?? (showFilters ? "blog" : "article");
+const recentPosts = posts.slice(0, 5);
 const years = [...new Set(posts.map((post) => post.data.pubDate.getFullYear()))];
 ---
 
@@ -69,10 +70,22 @@ const years = [...new Set(posts.map((post) => post.data.pubDate.getFullYear()))]
           ))}
         </div>
       </section>
+
+      <section class="blog-sidebar__section">
+        <h2>近期文档</h2>
+        <div class="blog-sidebar__recent">
+          {recentPosts.map((post) => (
+            <a href={`/blog/${post.slug}/`}>
+              <span>{post.data.title}</span>
+              <small>{post.data.pubDate.toLocaleDateString("zh-CN")}</small>
+            </a>
+          ))}
+        </div>
+      </section>
     </>
   ) : (
     <section class="blog-sidebar__section">
-      <h2>全部文档</h2>
+      <a class="blog-sidebar__title-link" href="/blog">全部文档</a>
       <div class="blog-sidebar__docs">
         {posts.map((post) => (
           <a class:list={[post.slug === currentSlug && "is-active"]} href={`/blog/${post.slug}/`}>
@@ -123,6 +136,7 @@ const years = [...new Set(posts.map((post) => post.data.pubDate.getFullYear()))]
 
   .blog-sidebar__all,
   .blog-sidebar__years a,
+  .blog-sidebar__recent a,
   .blog-sidebar__docs a {
     display: block;
     color: var(--text-soft);
@@ -133,8 +147,20 @@ const years = [...new Set(posts.map((post) => post.data.pubDate.getFullYear()))]
   .blog-sidebar__all:hover,
   .blog-sidebar__all.is-active,
   .blog-sidebar__years a:hover,
+  .blog-sidebar__recent a:hover,
   .blog-sidebar__docs a:hover,
   .blog-sidebar__docs a.is-active {
+    color: var(--accent-strong);
+  }
+
+  .blog-sidebar__title-link {
+    color: var(--text);
+    font-size: 0.95rem;
+    font-weight: 700;
+    transition: color var(--transition);
+  }
+
+  .blog-sidebar__title-link:hover {
     color: var(--accent-strong);
   }
 
@@ -275,6 +301,22 @@ const years = [...new Set(posts.map((post) => post.data.pubDate.getFullYear()))]
     max-height: calc(100vh - 12rem);
     overflow-y: auto;
     padding-right: 0.2rem;
+  }
+
+  .blog-sidebar__recent {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .blog-sidebar__recent a {
+    display: grid;
+    gap: 0.2rem;
+    padding: 0.45rem 0;
+  }
+
+  .blog-sidebar__recent small {
+    color: var(--text-faint);
+    font-size: 0.78rem;
   }
 
   .blog-sidebar__docs a {

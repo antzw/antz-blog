@@ -50,7 +50,7 @@ const projects = [
               <span class="chip">{item}</span>
             ))}
           </div>
-          <span class="placeholder-link">链接待补充</span>
+          <span class="text-link">链接待补充</span>
         </article>
       ))}
     </section>
@@ -91,9 +91,10 @@ const projects = [
   }
 
   /* Placeholder metadata text */
-  .placeholder-link {
-    color: var(--text-faint);
-    font-size: 0.92rem;
+    .text-link {
+    width: fit-content;
+    color: var(--accent-strong);
+    font-weight: 700;
   }
 
   @media (max-width: 900px) {
