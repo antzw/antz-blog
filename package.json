@@ -1,12 +1,15 @@
 {
-  "name": "my-blog",
+  "name": "antz-blog",
+  "description": "A content-first Astro blog template with MDX, tags, search, and clean reading UX.",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "license": "MIT",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
+    "dev": "node ./node_modules/astro/dist/cli/index.js dev",
+    "build": "node ./node_modules/astro/dist/cli/index.js build",
+    "preview": "node ./node_modules/astro/dist/cli/index.js preview",
+    "check": "node ./node_modules/astro/dist/cli/index.js check",
+    "astro": "node ./node_modules/astro/dist/cli/index.js"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.1",
