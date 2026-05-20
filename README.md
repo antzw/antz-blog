@@ -1,110 +1,120 @@
 # AntZ Blog Template
+[English](./docs/README.md) | [简体中文](./docs/README.zh-CN.md)
 
-一个面向个人博客/知识库的 Astro 模板，强调内容优先、阅读体验和可维护性。
+## Preview
 
-- MD/MDX 内容驱动
-- 标签筛选 + 全文搜索
-- 文章目录（TOC）
-- 响应式布局 + 亮/暗主题
-- 开箱可部署到 Cloudflare Pages
+| Light                             | Dark                             |
+| -------------------------------- | --------------------------------- |
+| ![预览](./docs/img1.png) | ![预览](./docs/img3.png) |
+| ![预览](./docs/img2.png) | ![预览](./docs/img4.png) |
+
+
+
+A content-first Astro blog template focused on readability, maintainability, and fast publishing.
+
+- Markdown/MDX content workflow
+- Tag filtering + full-text search
+- Table of contents (TOC)
+- Responsive layout + light/dark theme
+- Ready to deploy on Cloudflare Pages
 
 ## Demo
 
-- 线上示例：[https://antz.top]（替换为你的真实地址）
+- Live site: [https://antz.top](https://antz.top)
 
-## 快速开始
+## Quick Start
 
 ```bash
 npm install
 npm run dev
 ```
 
-访问 `http://localhost:4321`。
+Then open `http://localhost:4321`.
 
-常用命令：
+Common commands:
 
-- `npm run dev`：本地开发
-- `npm run build`：生产构建到 `dist/`
-- `npm run preview`：本地预览构建结果
-- `npm run check`：Astro 类型与内容检查
+- `npm run dev`: start local development
+- `npm run build`: build production files to `dist/`
+- `npm run preview`: preview the production build locally
+- `npm run check`: run Astro checks
 
-## 内容写作
+## Writing Content
 
-博客内容目录：`src/content/blog/`
+Blog posts live in `src/content/blog/`.
 
-每篇文章使用 `.md` 或 `.mdx`，Frontmatter 字段：
+Each post can be `.md` or `.mdx` with this frontmatter schema:
 
 ```yaml
 ---
-title: "文章标题"
-description: "一句话摘要"
+title: "Post title"
+description: "One-line summary"
 pubDate: 2026-05-21
 tags: ["Astro", "Blog"]
 cover: "/cover/your-image.jpg"
 ---
 ```
 
-其中 `title`、`description`、`pubDate` 为必填。
+Required fields: `title`, `description`, `pubDate`.
 
-## 模板自定义
+## Customize the Template
 
-你通常只需要修改这几处：
+Most customizations happen in these files:
 
-- 站点布局与导航：`src/layouts/Layout.astro`
-- 首页内容：`src/pages/index.astro`
-- 联系方式：`src/components/ContactLinks.astro`
-- 全局主题变量：`src/styles/global.css`
+- Layout and navigation: `src/layouts/Layout.astro`
+- Homepage content: `src/pages/index.astro`
+- Contact links: `src/components/ContactLinks.astro`
+- Global theme tokens/styles: `src/styles/global.css`
 
-## Cloudflare Pages 部署
+## Deploy to Cloudflare Pages
 
-1. 将仓库推送到 GitHub。
-2. Cloudflare Pages 连接该仓库。
-3. 构建配置：
+1. Push this repository to GitHub.
+2. Connect the repository in Cloudflare Pages.
+3. Build settings:
 - Framework preset: `Astro`
 - Build command: `npm run build`
 - Build output directory: `dist`
-4. 在 Pages 环境变量中设置：
-- `SITE_URL=https://你的域名`
-5. 首次部署成功后绑定自定义域名。
+4. Add environment variable in Pages:
+- `SITE_URL=https://your-domain.com`
+5. Deploy and bind your custom domain.
 
-## 发布前检查
+## Pre-release Checklist
 
 ```bash
 npm run check
 npm run build
 ```
 
-确保以下项目通过：
+Verify:
 
-- 页面可正常访问（首页、博客列表、文章详情）
-- 标签筛选和搜索可用
-- 移动端样式正常
+- Homepage, blog list, and post detail pages load correctly
+- Tag filters and search work as expected
+- Mobile and desktop layouts are both correct
 
-## 推广你的博客（可直接执行）
+## Promotion Playbook
 
-### 1) Astro 官方生态
+### 1) Astro Ecosystem
 
-- 提交到 Astro Showcase：`https://astro.build/showcase/`
-- 如果后续抽象成通用主题，可提交 Astro Themes：`https://astro.build/themes/`
+- Submit to Astro Showcase: `https://astro.build/showcase/`
+- If you later package this as a generic theme, submit to Astro Themes: `https://astro.build/themes/`
 
-### 2) 搜索引擎收录
+### 2) Search Indexing
 
-- 上线后在 `public/robots.txt` 把 `Sitemap` 改为真实域名
-- 在 Google Search Console 提交 sitemap
-- 每篇文章补齐明确标题、摘要、标签
+- Update the sitemap URL in `public/robots.txt` to your real domain after deployment
+- Submit your sitemap in Google Search Console
+- Keep post titles/descriptions/tags explicit and consistent
 
-### 3) 社区与社媒分发
+### 3) Community Distribution
 
-首月建议节奏：
+First-month cadence:
 
-- 第 1 周：发布开源介绍（X / 即刻 / 掘金）
-- 第 2 周：发布技术拆解文（DEV.to / Reddit `r/astro`、`r/webdev`）
-- 第 3~4 周：根据反馈迭代功能并发更新帖
+- Week 1: launch post (X / Juejin / product communities)
+- Week 2: technical write-up (DEV.to / Reddit `r/astro`, `r/webdev`)
+- Week 3-4: ship improvements based on feedback and post updates
 
-### 4) 转化追踪
+### 4) Track Conversion
 
-- 用 UTM 区分来源渠道
-- 追踪指标：UV、文章停留时长、GitHub Star/Fork、部署反馈数
+- Add UTM parameters for each channel
+- Track: UV, average reading time, GitHub stars/forks, deployment feedback
 
 ## License
 
